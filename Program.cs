@@ -6,6 +6,15 @@ namespace InTheBag
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSession();
+            builder.Services.AddSession(options =>
+            {
+                //change idle timeout to 5 minutes
+                options.IdleTimeout = TimeSpan.FromSeconds(60 * 5);
+                //turn on option for cookies 
+                options.Cookie.IsEssential = true;
+            });
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -25,6 +34,8 @@ namespace InTheBag
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();  
 
             app.MapControllerRoute(
                 name: "default",
